@@ -16,7 +16,7 @@ async function startCrawling(browserInstance, playerId) {
 const scraperObject = {
 	url: '',
     player: new Player(),
-	async scraper(browser){
+	async scraper(browser) {
 		let page = await browser.newPage();
 		console.log(`Navigating to ${this.url}...`);
 		await page.goto(this.url, {
@@ -27,13 +27,16 @@ const scraperObject = {
         //wait for table header anyways
        await page.waitForSelector('head > meta:nth-child(3)');
 
-        const playerName = await page.$$eval('head > meta', playerMetaData => {
-            playerMetaData = playerMetaData[0];
-            let metadata = playerMetaData.content.split('\n', 2);
-            return metadata[0];
-        });
-        
-        scraperObject.player.name = playerName;
+       async function getInitPlayerMetadata() {
+           const playerName = await page.$$eval('head > meta', playerMetaData => {
+               playerMetaData = playerMetaData[0];
+               let metadata = playerMetaData.content.split('\n', 2);
+               return metadata[0];
+           });
+           
+           scraperObject.player.name = playerName;
+       }
+
         
         //scrape current page
         async function scrapePlayerCurrentPage() {
@@ -51,18 +54,28 @@ const scraperObject = {
             for (let rounds of getRowInfo) {
                 scraperObject.player.addRound(rounds.roundId, rounds.winStatus)
             }
+            
+                    let nextRoundsButtonAvailable = false;
+                    try {
+                        const nextRoundsButton = await page.$$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a', element => element.find(element => element.textContent.includes('Next')));
+                        nextRoundsButtonAvailable = true;
+                    } catch (err) {
+                        nextRoundsButtonAvailable = false;
+                    }
 
-        }    
-
-        let nextRoundsButtonAvailable = false;
-        try {
-            const nextRoundsButton = await page.$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a', a => a.textContent);
-            nextRoundsButton = true;
-        } catch (err) {
-            nextRoundsButtonAvailable = false;
+                    if(nextRoundsButtonAvailable) {
+                        await page.click('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a:nth-child(2)')
+                        return scrapePlayerCurrentPage();
+                    }
         }
 
+        if (!scraperObject.player.name) {
+            getInitPlayerMetadata();
+        }
 
+        await scrapePlayerCurrentPage();
+        
+        console.log(scraperObject.player.rounds);
 
         await browser.close();
 }
