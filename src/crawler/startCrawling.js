@@ -1,25 +1,42 @@
 //const gatherPlayerRounds = require('./gatherPlayerRounds');
 
-const Player = require('../models/player')
+const Player = require('../models/Player')
+const playerMatchup = require('./functions/playerMatchup');
 
-async function startCrawling(browserInstance, playerId) {
+async function startCrawling(browserInstance, playerIds) {
     let browser;
+    let playerResults = [];
     try {
         browser = await browserInstance;
-        scraperObject.url = 'https://ns2panel.com/player/' + playerId
-        await scraperObject.scraper(browser, playerId);
+        for (playerId of playerIds) {
+            let url = 'https://ns2panel.com/player/' + playerId
+            playerResults.push(await scraperObject.scraper(browser, url));
+        }
+
+
+        const results = playerMatchup(playerResults[0], playerResults[1]);
+        
+        console.log(playerResults[0].name + " wins: " + results.playerOneWinsCount);
+        console.log(playerResults[1].name + " wins: " + results.playerTwoWinsCount);
+        console.log("Joint wins: " + results.jointWinsCount);
+        console.log("Joint losses: " + results.jointLosesCount);
+        console.log("Draws: " + results.draws);
+
+        await browser.close();
+        
     } catch(err) {
         console.log("Could not resolve the browser instance => ", err);
     }
 }
 
 const scraperObject = {
-	url: '',
-    player: new Player(),
-	async scraper(browser) {
+	async scraper(browser, url) {
+
+       const player = new Player();
+
 		let page = await browser.newPage();
-		console.log(`Navigating to ${this.url}...`);
-		await page.goto(this.url, {
+		console.log(`Navigating to ${url}...`);
+		await page.goto(url, {
             waitUntil: "domcontentloaded"
         });
         
@@ -34,7 +51,7 @@ const scraperObject = {
                return metadata[0];
            });
            
-           scraperObject.player.name = playerName;
+           player.name = playerName;
        }
 
         
@@ -44,40 +61,46 @@ const scraperObject = {
             let getRowInfo = await page.$$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > div.flex.flex-col.mb-4 > div > div > div > table > tbody > tr', row => {
     
                 return row.map(r => {
-                    let winStatus = r.querySelector('td:nth-child(6)').textContent; // strip newline and whitespace
+                    let winStatus = r.querySelector('td:nth-child(6)').textContent; // strip newline and whitespace TODO: SWITCH TO INNERTEXT TO AVOID SANI
                     winStatus = winStatus.replace(/(^\s*(?!.+)\n+)|(\n+\s+(?!.+)$)/g, "").trim();
                     let roundId = r.querySelector('td:nth-child(7) > div > a').href; // extract id
-                    return { roundId, winStatus }
+                    let team = r.querySelector('td:nth-child(5) > div > div > span').innerText;
+                    return { roundId, winStatus, team }
                  })
             });
     
             for (let rounds of getRowInfo) {
-                scraperObject.player.addRound(rounds.roundId, rounds.winStatus)
+                player.addRound(rounds.roundId, rounds.winStatus, rounds.team)
             }
             
                     let nextRoundsButtonAvailable = false;
                     try {
-                        const nextRoundsButton = await page.$$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a', element => element.find(element => element.textContent.includes('Next')));
-                        nextRoundsButtonAvailable = true;
+                        const nextRoundsButton = await page.$$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a:nth-child(2)', elements => {
+                            return elements.map(e => e.textContent.includes('Next'))
+                        });
+                        nextRoundsButtonAvailable = nextRoundsButton.length == 0 ? false : true;
                     } catch (err) {
+                        // "this should never happen"
                         nextRoundsButtonAvailable = false;
                     }
 
                     if(nextRoundsButtonAvailable) {
-                        await page.click('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a:nth-child(2)')
+                        try {
+                            await page.click('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a:nth-child(2)')
+                        } catch (err) {
+                            nextRoundsButtonAvailable = false;
+                        }
                         return scrapePlayerCurrentPage();
                     }
         }
 
-        if (!scraperObject.player.name) {
+        if (!player.name) {
             getInitPlayerMetadata();
         }
 
         await scrapePlayerCurrentPage();
-        
-        console.log(scraperObject.player.rounds);
-
-        await browser.close();
+                
+        return player
 }
 }
 

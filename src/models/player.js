@@ -15,8 +15,8 @@ class Player {
         return this.id;
     }
 */
-     addRound(roundId, winStatus) {
-        this._rounds.push(new Round(roundId, winStatus));
+     addRound(roundId, winStatus, team) {
+        this._rounds.push(new Round(roundId, winStatus, team));
     }
 
     get rounds() {
@@ -26,9 +26,10 @@ class Player {
 }
 
 class Round {
-    constructor (roundId, winStatus){
+    constructor (roundId, winStatus, team){
         this._roundId = roundId;
         this._winStatus = winStatus;
+        this._team = team;
     }
 
     get roundId() {
@@ -45,6 +46,14 @@ class Round {
 
     set winStatus(winStatus){
         this._winStatus = winStatus;
+    }
+
+    get team() {
+        return this._team;
+    }
+
+    set team(team){
+        this._team = team;
     }
 }
 

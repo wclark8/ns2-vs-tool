@@ -1,4 +1,4 @@
-const Player = require('../models/player');
+const Player = require('../models/Player');
 
 const TABLE_SELECTOR = 'body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > div.flex.flex-col.mb-4 > div > div > div > table > tbody'
 

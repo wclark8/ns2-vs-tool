@@ -1,15 +1,14 @@
 
-const player = require('./src/models/player');
+const player = require('./src/models/Player');
 const browserInstance = require('./src/crawler/browserInstance');
 const startCrawling = require('./src/crawler/startCrawling')
 
-const playerIds = ['112808379'];
+//const playerIds = ['141267840', '68545390'];
+const playerIds = ['27140047', '68545390'];
+//const playerIds = ['27140047', '83076348'];
+//const playerIds = ['98744814', '112370'];
 
 
 let crawlerInstance = browserInstance.browserInstanceLaunch();
 
-playerIds.forEach((playerId, index) => {
-    console.log("init");
-    console.log(playerId);
-    startCrawling(crawlerInstance, playerId)
-})
+startCrawling(crawlerInstance, playerIds);
