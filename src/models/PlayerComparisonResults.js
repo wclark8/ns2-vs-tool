@@ -87,16 +87,16 @@ class PlayerComparisonResults {
 
 
     calculateWinRatesCoop() {
-        let coopWrT = this._jointWins + this._jointLoses;
+        let coopWrT = this._jointWins['Joint Alien wins'] + this._jointWins['Joint Alien wins']  + this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses'];
 
-        let coopWr = this._wrFormula(this._jointWins, coopWrT)
+        let coopWr = this._wrFormula(this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins'], coopWrT)
         console.log("----------------");
-        console.log("Total COOP Win Rate : " + coopWr);
+        console.log("Total COOP Win Rate : " + coopWr + '%');
     }
 
     calculateWinRatesByTeamCoop() {
-        let coopWrTA = this._jointWins['Joint Alien wins'] + this._jointWins['Joint Alien losses'];
-        let coopWrTM = this._jointWins['Joint Marine wins'] + this._jointWins['Joint Marine losses'];
+        let coopWrTA = this._jointWins['Joint Alien wins'] + this._jointLoses['Joint Alien losses'];
+        let coopWrTM = this._jointWins['Joint Marine wins'] + this._jointLoses['Joint Marine losses'];
 
         let coopWrA = this._wrFormula(this._jointWins['Joint Alien wins'], coopWrTA);
         let coopWrM = this._wrFormula(this._jointWins['Joint Marine wins'], coopWrTM);

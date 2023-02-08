@@ -1,11 +1,15 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const {executablePath} = require('puppeteer')
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 
 async function browserInstanceLaunch() {
+	puppeteer.use(StealthPlugin())
     let browser;
 	try {
 	    console.log("Opening the browser......");
 	    browser = await puppeteer.launch({
-	        headless: false,
+	        headless: true,
+			executablePath: executablePath(),
 	        args: ["--disable-setuid-sandbox"],
 	        'ignoreHTTPSErrors': true,
 			defaultViewport: null,
