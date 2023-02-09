@@ -32,15 +32,10 @@ class PlayerComparisonResults {
 
 
     calculateWinRateTotalVs() {
-       // let p1w = this._playerOneWins['Alien wins'] + this._playerOneWins['Marine wins'];
-       // let p2w = this._playerTwoWins['Alien wins'] + this._playerTwoWins['Marine wins'];
         
         let p1w = this._playerOneWins['Alien wins'] + this._playerOneWins['Marine wins'];
         let p2w = this._playerTwoWins['Alien wins'] + this._playerTwoWins['Marine wins'];
         let total = p1w + p2w;
-        //take into account joint loses and wins
-       // p1w = p1w - ((this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins']) + (this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses']));
-       // p2w = p2w - ((this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins']) + (this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses']));
 
         let p1wr = this._wrFormula(p1w, total)
         let p2wr = this._wrFormula(p2w, total)
@@ -50,12 +45,11 @@ class PlayerComparisonResults {
         console.log(this._playerOneName +"'s Total Win Rate: " + p1wr + "%");
         console.log(this._playerTwoName +"'s Total Win Rate: " + p2wr + "%");
         console.log(" ")
+
+        return {'playerOneWinRate': p1wr, 'playerTwoWinRate': p2we}
     }
     
     calculateWinRatesByTeamVs() {
-        
-        //let jointWinsAndLosses = ((this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins']) + (this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses']));
-
 
         let p1wA = this._playerOneWins['Alien wins'] + this._playerTwoWins['Marine wins']
         let p2wA = this._playerTwoWins['Alien wins'] + this._playerOneWins['Marine wins'] 
@@ -71,9 +65,9 @@ class PlayerComparisonResults {
 
 
         let p1Awr = this._wrFormula(p1wao, p1wA)
-        let p1Mwr = this._wrFormula(p2wao, p1wM)
+        let p1Mwr = this._wrFormula(p1wmo, p1wM)
         
-        let p2Awr = this._wrFormula(p1wmo, p2wA)
+        let p2Awr = this._wrFormula(p2wao, p2wA)
         let p2Mwr = this._wrFormula(p2wmo, p2wM)
 
         console.log(this._playerOneName +" team win rate");
@@ -83,28 +77,35 @@ class PlayerComparisonResults {
         console.log(this._playerTwoName +" team win rate");
         console.log("Alien Win Rate: " + p2Awr + "%");
         console.log("Marine Win Rate: " + p2Mwr + "%"); 
+
+        return {'playerOneWinRateTeam': { 'alien': p1Awr, 'marine': p1Mwr}, 'playerTwoWinRateTeam': { 'alien': p2Awr, 'marine': p2Mwr} }
     }
 
 
     calculateWinRatesCoop() {
-        let coopWrT = this._jointWins['Joint Alien wins'] + this._jointWins['Joint Alien wins']  + this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses'];
+        let coopWrT = this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins']  + this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses'];
 
         let coopWr = this._wrFormula(this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins'], coopWrT)
         console.log("----------------");
         console.log("Total COOP Win Rate : " + coopWr + '%');
+
+        return {'COOPWinRate': coopWr}
     }
 
     calculateWinRatesByTeamCoop() {
         let coopWrTA = this._jointWins['Joint Alien wins'] + this._jointLoses['Joint Alien losses'];
         let coopWrTM = this._jointWins['Joint Marine wins'] + this._jointLoses['Joint Marine losses'];
 
-        let coopWrA = this._wrFormula(this._jointWins['Joint Alien wins'], coopWrTA);
+        //NEED A CHECK FOR NO ROUNDS PLAYED VS
+        let coopWrA = this._wrFormula(this._jointWins['Joint Alien wins'], coopWrTA); 
         let coopWrM = this._wrFormula(this._jointWins['Joint Marine wins'], coopWrTM);
 
         console.log('---------COOP WIN RATES----------');
         console.log('Alien win rate: ' + coopWrA + '%');
         console.log('Marine win rate: ' + coopWrM + '%');
+        console.log('---------------------------------');
 
+        return {'COOPAlienWinRate': coopWrA, 'COOPMarineWinRate': coopWrM}
     }
     
     _wrFormula(wins, total) {
