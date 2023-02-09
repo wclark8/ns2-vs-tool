@@ -2,8 +2,6 @@ const PlayerComparisonResults = require('../../models/PlayerComparisonResults');
 
 function playerMatchup(playerOne, playerTwo) {
     
-    // if playing togther make a percentage : move to model
-
     function updateVsPlayerWin(team, player) {
         if (team === 'Aliens' && player === 1) {
             playerOneVsWins['Alien wins']++
@@ -95,13 +93,13 @@ function playerMatchup(playerOne, playerTwo) {
     playerComparisonResults.jointLoses = playerCoopLosses;
     playerComparisonResults.draws = draws;
     
-    playerComparisonResults.calculateWinRateTotalVs();
-    playerComparisonResults.calculateWinRatesByTeamVs();
+    let winRateVs = playerComparisonResults.calculateWinRateTotalVs();
+    let winRateVsTeams =playerComparisonResults.calculateWinRatesByTeamVs();
 
-    playerComparisonResults.calculateWinRatesCoop();
-    playerComparisonResults.calculateWinRatesByTeamCoop();
+    let winRateCOOP = playerComparisonResults.calculateWinRatesCoop();
+    let winRateCOOPTeams = playerComparisonResults.calculateWinRatesByTeamCoop();
 
-    return {playerOneWinsCount, playerTwoWinsCount, jointWinsCount, jointLosesCount, draws};
+    return {playerOneWinsCount, playerTwoWinsCount, jointWinsCount, jointLosesCount, draws, winRateVs, winRateVsTeams, winRateCOOP, winRateCOOPTeams};
 
 }
 

@@ -3,12 +3,12 @@
 const Player = require('../models/Player')
 const playerMatchup = require('./functions/playerMatchup');
 
-async function startCrawling(browserInstance, playerIds) {
+async function startCrawling(browserInstance, payload) {
     let browser;
     let playerResults = [];
     try {
         browser = await browserInstance;
-        for (playerId of playerIds) {
+        for (playerId of payload.playerIds) {
             let url = 'https://ns2panel.com/player/' + playerId
             playerResults.push(await scraperObject.scraper(browser, url));
         }
@@ -24,6 +24,10 @@ async function startCrawling(browserInstance, playerIds) {
 
         await browser.close();
         
+        //return results, make them nice later
+
+        return results;
+
     } catch(err) {
         console.log("Could not resolve the browser instance => ", err);
     }
