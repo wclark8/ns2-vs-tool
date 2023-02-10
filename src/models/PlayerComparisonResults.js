@@ -46,7 +46,7 @@ class PlayerComparisonResults {
         console.log(this._playerTwoName +"'s Total Win Rate: " + p2wr + "%");
         console.log(" ")
 
-        return {'playerOneWinRate': p1wr, 'playerTwoWinRate': p2we}
+        return {'playerOneWinRate': p1wr, 'playerTwoWinRate': p2wr}
     }
     
     calculateWinRatesByTeamVs() {

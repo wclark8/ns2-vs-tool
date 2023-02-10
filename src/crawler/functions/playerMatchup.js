@@ -99,7 +99,12 @@ function playerMatchup(playerOne, playerTwo) {
     let winRateCOOP = playerComparisonResults.calculateWinRatesCoop();
     let winRateCOOPTeams = playerComparisonResults.calculateWinRatesByTeamCoop();
 
-    return {playerOneWinsCount, playerTwoWinsCount, jointWinsCount, jointLosesCount, draws, winRateVs, winRateVsTeams, winRateCOOP, winRateCOOPTeams};
+    //quick fix
+    let playerOneName = playerOne.name
+    let playerTwoName = playerTwo.name
+
+
+    return {playerOneName, playerTwoName, playerOneWinsCount, playerTwoWinsCount, jointWinsCount, jointLosesCount, draws, winRateVs, winRateVsTeams, winRateCOOP, winRateCOOPTeams};
 
 }
 

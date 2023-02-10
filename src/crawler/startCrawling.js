@@ -25,7 +25,6 @@ async function startCrawling(browserInstance, payload) {
         await browser.close();
         
         //return results, make them nice later
-
         return results;
 
     } catch(err) {
