@@ -3,6 +3,18 @@ class Player {
         this._rounds = [];
     }
 
+    set elo(elo) {
+        this._elo = {
+            elo: elo.elo,
+            marineElo: elo.marineElo,
+            alienElo: elo.alienElo
+        }
+    }
+
+    get elo() {
+        return this._elo;
+    }
+
     set name(name){
         this._name = name;
     }
@@ -10,6 +22,15 @@ class Player {
     get name() {
         return this._name;
     }
+
+    set avatarUrl(avatarUrl) {
+        this._avatarUrl = avatarUrl;
+    }
+
+    get avatarUrl() {
+        return this._avatarUrl;
+    }
+    
 /*
     get id() {
         return this.id;
