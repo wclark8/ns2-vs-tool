@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import { CardActions, CardHeader } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
+import Avatar from '@mui/material/Avatar';
 
 export default function PlayerResultsCard(props){
 
@@ -25,7 +26,10 @@ export default function PlayerResultsCard(props){
         <Card sx={{ minWidth: 275 }} elevation={3}>
             <CardHeader
         title={result.name}
-        subheader="ELO"
+        subheader={result.elo.elo}
+        avatar={
+            <Avatar src={result.avatarUrl} sx={{width:70 , height: 70 }}></Avatar>
+        }
       />
             <CardContent>
                 <List>
@@ -50,7 +54,25 @@ export default function PlayerResultsCard(props){
                     <CardContent>
                         <List>
                             <ListItem>
+                                <ListItem>
                                 <ListItemText>Total Win Count: {result.playerWinCount}</ListItemText>
+                                </ListItem>
+                                <Divider />
+                                <ListItem>
+                                <ListItemText>{result.elo.marineElo}</ListItemText>
+                                </ListItem>
+                                <Divider />
+                                <ListItem>
+                                <ListItemText>{result.elo.alienElo}</ListItemText>
+                                </ListItem>
+                                <Divider />
+                                <ListItem>
+                                <ListItemText>{result.accuracies.marineAcc}</ListItemText>
+                                </ListItem>
+                                <Divider />
+                                <ListItem>
+                                <ListItemText>{result.accuracies.alienAcc}</ListItemText>
+                                </ListItem>
                             </ListItem>
                         </List>
                     </CardContent>

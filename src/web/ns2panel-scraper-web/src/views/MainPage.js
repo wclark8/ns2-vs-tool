@@ -25,7 +25,7 @@ export default function MainPage(props) {
     const [jointResults, setJointResults] = React.useState();
 
     const handleCompareSubmission = async () => {
-        // check steam id
+        // TODO check steam id
         if (player1 && player2) {
             setSubmissionProgress(true);
             const results = await scraperApi.comparePlayersVs(player1, player2);
@@ -34,6 +34,9 @@ export default function MainPage(props) {
                    // check returned obj
                    const playerOneResults = {
                        name: results.playerOneName,
+                       avatarUrl: results.playerOneAvatar,
+                       elo: results.playerOneElo,
+                       accuracies: results.playerOneAccuracies,
                        overallWinRate: results.winRateVs.playerOneWinRate,
                        alienWinRate: results.winRateVsTeams.playerOneWinRateTeam.alien,
                        marineWinRate: results.winRateVsTeams.playerOneWinRateTeam.marine,
@@ -41,6 +44,9 @@ export default function MainPage(props) {
                    }
                    const playerTwoResults = {
                        name: results.playerTwoName,
+                       avatarUrl: results.playerTwoAvatar,
+                       elo: results.playerTwoElo,
+                       accuracies: results.playerTwoAccuracies,
                        overallWinRate: results.winRateVs.playerTwoWinRate,
                        alienWinRate: results.winRateVsTeams.playerTwoWinRateTeam.alien,
                        marineWinRate:results.winRateVsTeams.playerTwoWinRateTeam.marine,
@@ -48,14 +54,12 @@ export default function MainPage(props) {
                    }
                    const jointResultsObj = {
                         overallCOOPWinRate: results.winRateCOOP.COOPWinRate,
-                        alienCOOPWinRate: results.winRateCOOPTeams.COOPAlienWinRate, //if null
+                        alienCOOPWinRate: results.winRateCOOPTeams.COOPAlienWinRate,
                         marineCOOPWinRate: results.winRateCOOPTeams.COOPMarineWinRate,
                    }
                    setPlayer1Results(playerOneResults);
                    setPlayer2Results(playerTwoResults);
                    setJointResults(jointResultsObj);
-                   // "winRateCOOP":{"COOPWinRate":57.49999999999999},
-                  // "winRateCOOPTeams":{"COOPAlienWinRate":null,"COOPMarineWinRate":57.49999999999999}}
                }
         }
 

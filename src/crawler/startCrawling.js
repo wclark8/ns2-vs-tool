@@ -50,10 +50,10 @@ const scraperObject = {
        async function getInitPlayerMetadata() {
            const playerData = await page.$$eval('head > meta', playerMetaData => {
 
-               let playerAvatarMetadata = playerMetaData[1];
+               let playerAvatarMetadata = playerMetaData[1].content;
                playerMetaData = playerMetaData[0];
 
-               let metadata = playerMetaData.content.split('\n', 2);
+               let metadata = playerMetaData.content.split('\n', 7);
             
                // populate initial player data
                 let player = {
@@ -61,6 +61,8 @@ const scraperObject = {
                     elo: metadata[1],
                     marineElo: metadata[2],
                     alienElo: metadata[3],
+                    marineAcc: metadata[5],
+                    alienAcc: metadata[6],
                     playerAvatarMetadata: playerAvatarMetadata
                 }
                return player;
@@ -69,6 +71,7 @@ const scraperObject = {
            player.name = playerData.name;
            player.avatarUrl = playerData.playerAvatarMetadata;
            player.elo = { elo: playerData.elo, marineElo: playerData.marineElo, alienElo: playerData.alienElo }
+           player.accuracies = { marineAcc: playerData.marineAcc, alienAcc: playerData.alienAcc }
        }
 
         

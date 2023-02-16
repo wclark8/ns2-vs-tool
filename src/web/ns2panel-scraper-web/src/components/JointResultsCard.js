@@ -22,7 +22,7 @@ export default function JointResultsCard(props) {
    return(
        <Card sx={{ minWidth: 275 }} elevation={3}>
             <CardContent>
-            {result.overallCOOPWinRate !== 0 || 'N/A' &&
+            {result.overallCOOPWinRate !== 'N/A' &&
                 <List>
                     <Divider />
                     <ListItem>
@@ -37,7 +37,7 @@ export default function JointResultsCard(props) {
                         <ListItemText>Marine COOP Win Rate: {Math.trunc(result.marineCOOPWinRate)}%</ListItemText>
                     </ListItem>
                 </List>} 
-                { result.overallCOOPWinRate == 0 && <Typography> No COOP Games Found </Typography>}
+                { result.overallCOOPWinRate === 'N/A' && <Typography> No COOP Games Found </Typography>}
             </CardContent>
         </Card>)
 }
