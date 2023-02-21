@@ -22,8 +22,8 @@ class PlayerComparisonResults {
         this._jointWins = jointWins;
     }
 
-    set jointLoses(jointLoses) {
-        this._jointLoses = jointLoses
+    set jointLosses(jointLosses) {
+        this._jointLosses = jointLosses
     }
 
     set draws(draws) {
@@ -83,7 +83,7 @@ class PlayerComparisonResults {
 
 
     calculateWinRatesCoop() {
-        let coopWrT = this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins']  + this._jointLoses['Joint Alien losses'] + this._jointLoses['Joint Marine losses'];
+        let coopWrT = this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins']  + this._jointLosses['Joint Alien losses'] + this._jointLosses['Joint Marine losses'];
 
         let coopWr = this._wrFormula(this._jointWins['Joint Alien wins'] + this._jointWins['Joint Marine wins'], coopWrT)
         console.log("----------------");
@@ -93,10 +93,9 @@ class PlayerComparisonResults {
     }
 
     calculateWinRatesByTeamCoop() {
-        let coopWrTA = this._jointWins['Joint Alien wins'] + this._jointLoses['Joint Alien losses'];
-        let coopWrTM = this._jointWins['Joint Marine wins'] + this._jointLoses['Joint Marine losses'];
+        let coopWrTA = this._jointWins['Joint Alien wins'] + this._jointLosses['Joint Alien losses'];
+        let coopWrTM = this._jointWins['Joint Marine wins'] + this._jointLosses['Joint Marine losses'];
 
-        //NEED A CHECK FOR NO ROUNDS PLAYED VS
         let coopWrA = this._wrFormula(this._jointWins['Joint Alien wins'], coopWrTA); 
         let coopWrM = this._wrFormula(this._jointWins['Joint Marine wins'], coopWrTM);
 

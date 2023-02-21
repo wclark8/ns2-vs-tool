@@ -15,11 +15,11 @@ function playerMatchup(playerOne, playerTwo) {
     }
 
     function updateCoopPlayerWin(team) {
-        team === 'Alien' ? playerCoopWins['Joint Alien wins']++ : playerCoopWins['Joint Marine wins']++ 
+        team === 'Aliens' ? playerCoopWins['Joint Alien wins']++ : playerCoopWins['Joint Marine wins']++ 
     }
     
     function updateCoopPlayerLosses(team) {
-        team === 'Alien' ? playerCoopLosses['Joint Alien losses']++ : playerCoopLosses['Joint Marine losses']++ 
+        team === 'Aliens' ? playerCoopLosses['Joint Alien losses']++ : playerCoopLosses['Joint Marine losses']++ 
     }
 
     const playerOneRounds = playerOne.rounds;
@@ -90,7 +90,7 @@ function playerMatchup(playerOne, playerTwo) {
     playerComparisonResults.playerOneWins = playerOneVsWins;
     playerComparisonResults.playerTwoWins = playerTwoVsWins;
     playerComparisonResults.jointWins = playerCoopWins;
-    playerComparisonResults.jointLoses = playerCoopLosses;
+    playerComparisonResults.jointLosses = playerCoopLosses;
     playerComparisonResults.draws = draws;
     
     let winRateVs = playerComparisonResults.calculateWinRateTotalVs();

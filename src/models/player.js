@@ -15,6 +15,17 @@ class Player {
         return this._elo;
     }
 
+    set accuracies(accuracies) {
+        this._accuracies = {
+            marineAcc: accuracies.marineAcc,
+            alienAcc: accuracies.alienAcc
+        }
+    }
+
+    get accuracies() {
+        return this._accuracies;
+    }
+
     set name(name){
         this._name = name;
     }
@@ -31,12 +42,7 @@ class Player {
         return this._avatarUrl;
     }
     
-/*
-    get id() {
-        return this.id;
-    }
-*/
-     addRound(roundId, winStatus, team) {
+    addRound(roundId, winStatus, team) {
         this._rounds.push(new Round(roundId, winStatus, team));
     }
 
