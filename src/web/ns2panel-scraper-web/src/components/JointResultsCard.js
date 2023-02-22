@@ -13,7 +13,7 @@ export default function JointResultsCard(props) {
 
     // check if exists
 
-    for(const wr in result) {
+    for(let wr in result) {
         if(wr == null || NaN) {
             wr = "N/A"
         }
