@@ -4,7 +4,6 @@
   "description": "",
   "main": "./src/svr/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/index.js",
     "start:local": "node ./src/index.js --env=local --player1=27140047 --player2=112370"
   },
