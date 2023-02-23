@@ -14,7 +14,7 @@ const mdTheme = createTheme();
 
 function App() {
 
-  const apiConfig = {url: 'http://localhost:3000', headers: {
+  const apiConfig = {url: process.env.REACT_APP_SERVICE_URL | 'http://localhost:3000', headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   },};
@@ -37,7 +37,7 @@ function App() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            NS2Panel VS Tool
+            NS2 VS Tool
           </Typography>
           </Toolbar>
       </AppBar>
