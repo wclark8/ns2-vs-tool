@@ -45,7 +45,7 @@ jobs:
         with:
           name: node-app
       - run: |
-          unzip node-app.zip && A
+          unzip -o node-app.zip
           rm node-app.zip
 
       - name: 'Deploy to Azure Web App'
