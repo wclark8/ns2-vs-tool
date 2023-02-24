@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'ns2-vs-tool'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AB113202186044BD950B60C26CBC4036 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5A3F683FE3FF483A93A71BFD7EA81BD2 }}
           package: .
