@@ -7,13 +7,17 @@ async function browserInstanceLaunch() {
     let browser;
 	try {
 	    console.log("Opening the browser......");
-	    browser = await puppeteer.launch({
+	    /*browser = await puppeteer.launch({
 	        headless: true,
 			executablePath: executablePath(),
-	        args: ["--disable-setuid-sandbox"],
+	        args: ["--disable-setuid-sandbox", "--no-sandbox"],
 	        'ignoreHTTPSErrors': true,
 			defaultViewport: null,
-	    });
+	    }); */
+
+		 browser = await puppeteer.connect({
+			browserWSEndpoint: 'wss://chrome.browserless.io/'
+		  });
 	} catch (err) {
 	    console.log("Could not create a browser instance => : ", err);
 	}
