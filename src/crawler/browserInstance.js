@@ -16,7 +16,7 @@ async function browserInstanceLaunch() {
 	    }); */
 
 		 browser = await puppeteer.connect({
-			browserWSEndpoint: 'wss://chrome.browserless.io/'
+			browserWSEndpoint: 'wss://chrome.browserless.io?token=3f40c62a-205a-4655-8687-a70e559892df'
 		  });
 	} catch (err) {
 	    console.log("Could not create a browser instance => : ", err);
