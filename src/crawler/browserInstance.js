@@ -17,7 +17,7 @@ async function browserInstanceLaunch() {
 			});
 		} else {
 			browser = await puppeteer.connect({
-			   browserWSEndpoint: 'wss://chrome.browserless.io?token=' + process.env.BROWSERLESS_TOKEN
+			   browserWSEndpoint: 'wss://chrome.browserless.io?token=' + process.env.BROWSERLESS_TOKEN + '&timeout=1000000000'
 			 });
 		}
 
