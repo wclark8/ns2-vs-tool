@@ -25,7 +25,6 @@ async function startCrawling(browserInstance, payload) {
         await browser.close();
         
         //return results, make them nice later
-
         return results;
 
     } catch(err) {
@@ -49,13 +48,30 @@ const scraperObject = {
        await page.waitForSelector('head > meta:nth-child(3)');
 
        async function getInitPlayerMetadata() {
-           const playerName = await page.$$eval('head > meta', playerMetaData => {
+           const playerData = await page.$$eval('head > meta', playerMetaData => {
+
+               let playerAvatarMetadata = playerMetaData[1].content;
                playerMetaData = playerMetaData[0];
-               let metadata = playerMetaData.content.split('\n', 2);
-               return metadata[0];
+
+               let metadata = playerMetaData.content.split('\n', 7);
+            
+               // populate initial player data
+                let player = {
+                    name: metadata[0],
+                    elo: metadata[1],
+                    marineElo: metadata[2],
+                    alienElo: metadata[3],
+                    marineAcc: metadata[5],
+                    alienAcc: metadata[6],
+                    playerAvatarMetadata: playerAvatarMetadata
+                }
+               return player;
            });
-           
-           player.name = playerName;
+
+           player.name = playerData.name;
+           player.avatarUrl = playerData.playerAvatarMetadata;
+           player.elo = { elo: playerData.elo, marineElo: playerData.marineElo, alienElo: playerData.alienElo }
+           player.accuracies = { marineAcc: playerData.marineAcc, alienAcc: playerData.alienAcc }
        }
 
         
@@ -72,7 +88,7 @@ const scraperObject = {
                     return { roundId, winStatus, team }
                  })
             });
-    
+
             for (let rounds of getRowInfo) {
                 player.addRound(rounds.roundId, rounds.winStatus, rounds.team)
             }
