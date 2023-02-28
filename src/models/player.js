@@ -3,6 +3,29 @@ class Player {
         this._rounds = [];
     }
 
+    set elo(elo) {
+        this._elo = {
+            elo: elo.elo,
+            marineElo: elo.marineElo,
+            alienElo: elo.alienElo
+        }
+    }
+
+    get elo() {
+        return this._elo;
+    }
+
+    set accuracies(accuracies) {
+        this._accuracies = {
+            marineAcc: accuracies.marineAcc,
+            alienAcc: accuracies.alienAcc
+        }
+    }
+
+    get accuracies() {
+        return this._accuracies;
+    }
+
     set name(name){
         this._name = name;
     }
@@ -10,12 +33,16 @@ class Player {
     get name() {
         return this._name;
     }
-/*
-    get id() {
-        return this.id;
+
+    set avatarUrl(avatarUrl) {
+        this._avatarUrl = avatarUrl;
     }
-*/
-     addRound(roundId, winStatus, team) {
+
+    get avatarUrl() {
+        return this._avatarUrl;
+    }
+    
+    addRound(roundId, winStatus, team) {
         this._rounds.push(new Round(roundId, winStatus, team));
     }
 
