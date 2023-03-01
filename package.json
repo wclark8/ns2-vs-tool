@@ -5,7 +5,7 @@
   "main": "./src/svr/server.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "start:local": "node ./src/index.js --env=local --player1=27140047 --player2=112370"
+    "start:localCmdLine": "node ./src/index.js --env=localCmdLine --player1=27140047 --player2=112370"
   },
   "author": "",
   "license": "ISC",
