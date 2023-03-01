@@ -5,7 +5,7 @@ const startServer = require('./svr/server')
 const triggerCrawlingOperations = require('./svr/triggerCrawlingOperations')
 
 async function init() {
-    if (process.env.NODE_ENV === 'local' || argv.env === 'local') {
+    if (process.env.NODE_ENV === 'localCmdLine' || argv.env === 'localCmdLine') {
         try {
             const playerIds = [argv.player1, argv.player2]
             await triggerCrawlingOperations(playerIds);

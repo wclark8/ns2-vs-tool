@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import { TextField } from '@mui/material';
 import { Container } from '@mui/material';
 import { Button } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import PlayerResultsCard from '../components/PlayerResultsCard';
 import JointResultsCard from '../components/JointResultsCard';
@@ -14,22 +15,34 @@ export default function MainPage(props) {
     }
 
     const scraperApi = props.scraperApi;
-
+    
     const [player1, setPlayer1] = React.useState("");
     const [player2, setPlayer2] = React.useState("");
-
+    
     const [submissionInProgress, setSubmissionProgress] = React.useState(false);
-
+    const [currentSubmissionCompleted, setCurrentSubmissionCompleted] = React.useState(false);
+    const [progressValue, setProgressValue] = React.useState();
+    
     const [player1Results, setPlayer1Results] = React.useState();
     const [player2Results, setPlayer2Results] = React.useState();
     const [jointResults, setJointResults] = React.useState();
+    const [hasVsResults, setHasVsResults] = React.useState(false);
+    
+    React.useEffect(() => {
+        if (submissionInProgress) {
+            const interval = setInterval( async () => {
+                setProgressValue(await scraperApi.getVsProgress())
+                }, 2000);
+                  return () => clearInterval(interval);
+        }
+        }, [submissionInProgress, scraperApi])
 
     const handleCompareSubmission = async () => {
-        // TODO check steam id
+        // TODO check steam id valid
         if (player1 && player2) {
             setSubmissionProgress(true);
             const results = await scraperApi.comparePlayersVs(player1, player2);
-            if(results) {
+            if (results) {
                 setSubmissionProgress(false);
                    // check returned obj
                    const playerOneResults = {
@@ -57,9 +70,13 @@ export default function MainPage(props) {
                         alienCOOPWinRate: results.winRateCOOPTeams.COOPAlienWinRate,
                         marineCOOPWinRate: results.winRateCOOPTeams.COOPMarineWinRate,
                    }
-                   setPlayer1Results(playerOneResults);
-                   setPlayer2Results(playerTwoResults);
+                   if (playerOneResults.playerWinCount + playerTwoResults.playerWinCount > 0) {
+                    setHasVsResults(true);
+                    setPlayer1Results(playerOneResults);
+                    setPlayer2Results(playerTwoResults);
+                   }
                    setJointResults(jointResultsObj);
+                   setCurrentSubmissionCompleted(true);
                }
         }
 
@@ -73,24 +90,26 @@ export default function MainPage(props) {
                         <TextField id="player1-textField" label="" variant="filled" helperText="Enter player 1's ID" value={player1} onChange={(e) => { setPlayer1(e.target.value) }} />
                     </Grid>
                     <Grid xs={8} style={cardGridStyling}>
-                        {player1Results && <PlayerResultsCard result={player1Results}></PlayerResultsCard>}
+                        {hasVsResults && <PlayerResultsCard result={player1Results}></PlayerResultsCard>}
                     </Grid>
                     <Grid xs={4}>
                         <TextField id="player2-textField" label="" variant="filled" helperText="Enter player 2's ID" value={player2} onChange={(e) => { setPlayer2(e.target.value) }} />
                     </Grid>
                     <Grid xs={8} style={cardGridStyling}>
-                        {player2Results && <PlayerResultsCard result={player2Results}></PlayerResultsCard>}
+                        {hasVsResults && <PlayerResultsCard result={player2Results}></PlayerResultsCard>}
                     </Grid>
                     <Grid xs={4}>
                         <Button id="compare-button" onClick={() => {
                             handleCompareSubmission();
                         }}>Compare</Button>
-                        {submissionInProgress && <CircularProgress></CircularProgress>}
+                        {submissionInProgress && <CircularProgress variant='determinate' value={progressValue}></CircularProgress>}
                     </Grid>
                     <Grid xs={8} style={cardGridStyling}>
                         {jointResults && <JointResultsCard result={jointResults}></JointResultsCard>}
                     </Grid>
                 </Grid>
+                {submissionInProgress && <Alert severity="info">Please be patient...</Alert>}
+                {!submissionInProgress && !hasVsResults && currentSubmissionCompleted && <Alert severity="warning">No VS Results</Alert>}
             </Container>
 
         </div>

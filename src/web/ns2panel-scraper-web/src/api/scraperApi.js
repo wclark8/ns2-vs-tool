@@ -24,4 +24,16 @@ export default class ScraperApi {
         }
       
         }
+    
+        /*
+        * add id reference later
+        */
+    getVsProgress = async () => {
+        try {
+            const response = await this._instance.get('/progress');
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
     }
+}
