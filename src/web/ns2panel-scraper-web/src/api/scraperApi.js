@@ -23,8 +23,29 @@ export default class ScraperApi {
             console.log(err)
         }
       
-        }
+    }
     
+
+    comparePlayersVsAsync = async (player1, player2) => {
+        const playerIdArray = [player1, player2];
+        try{
+            const response = await this._instance.post('/compare', { playerIds: playerIdArray} );
+            return response.data;
+        } catch (err) {
+            console.log(err)
+        }
+      
+    }
+
+        getPlayerVsResults = async (id) => {
+            try {
+                const response = await this._instance.get('/results?id=' + id)
+                return response.data;
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
         /*
         * add id reference later
         */

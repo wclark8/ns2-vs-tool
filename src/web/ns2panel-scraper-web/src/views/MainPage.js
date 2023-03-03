@@ -19,31 +19,95 @@ export default function MainPage(props) {
     const [player1, setPlayer1] = React.useState("");
     const [player2, setPlayer2] = React.useState("");
     
-    const [submissionInProgress, setSubmissionProgress] = React.useState(false);
+    const [submissionInProgress, setSubmissionInProgress] = React.useState(false);
     const [currentSubmissionCompleted, setCurrentSubmissionCompleted] = React.useState(false);
+
+    const [comparisonID, setComparisonID] = React.useState();
+
     const [progressValue, setProgressValue] = React.useState();
     
     const [player1Results, setPlayer1Results] = React.useState();
     const [player2Results, setPlayer2Results] = React.useState();
     const [jointResults, setJointResults] = React.useState();
     const [hasVsResults, setHasVsResults] = React.useState(false);
-    
-    React.useEffect(() => {
-        if (submissionInProgress) {
-            const interval = setInterval( async () => {
-                setProgressValue(await scraperApi.getVsProgress())
-                }, 2000);
-                  return () => clearInterval(interval);
-        }
-        }, [submissionInProgress, scraperApi])
 
+    const [pollingLoop, setPollingLoop] = React.useState(null);
+
+    const stopPolling = () => {
+        setPollingLoop(interval => {
+            clearInterval(interval);
+            return null;
+        })
+    }
+
+        React.useEffect(() => {
+            if (submissionInProgress && !currentSubmissionCompleted) {
+                setPollingLoop(setInterval(async () => {
+                    const progressObj = await scraperApi.getVsProgress();
+                    setProgressValue(progressObj.progressValue)
+                    if (progressObj.comparisonComplete) {
+                        // get results
+                        const results = await scraperApi.getPlayerVsResults(comparisonID)
+                        shapeAndSetResults(results);
+                    }
+                }, 3200));
+
+            }
+        }, [submissionInProgress, scraperApi, comparisonID, currentSubmissionCompleted])
+
+    const triggerComparisonSubmission = async () => {
+        if (player1 && player2) {
+            const comparisonId = await scraperApi.comparePlayersVsAsync(player1, player2);
+            setSubmissionInProgress(true);
+            setComparisonID(comparisonId);
+        }
+    }
+
+    const shapeAndSetResults = (results) => {
+        setSubmissionInProgress(false);
+        const playerOneResults = {
+            name: results.playerOneName,
+            avatarUrl: results.playerOneAvatar,
+            elo: results.playerOneElo,
+            accuracies: results.playerOneAccuracies,
+            overallWinRate: results.winRateVs.playerOneWinRate,
+            alienWinRate: results.winRateVsTeams.playerOneWinRateTeam.alien,
+            marineWinRate: results.winRateVsTeams.playerOneWinRateTeam.marine,
+            playerWinCount: results.playerOneWinsCount
+        }
+        const playerTwoResults = {
+            name: results.playerTwoName,
+            avatarUrl: results.playerTwoAvatar,
+            elo: results.playerTwoElo,
+            accuracies: results.playerTwoAccuracies,
+            overallWinRate: results.winRateVs.playerTwoWinRate,
+            alienWinRate: results.winRateVsTeams.playerTwoWinRateTeam.alien,
+            marineWinRate:results.winRateVsTeams.playerTwoWinRateTeam.marine,
+            playerWinCount: results.playerTwoWinsCount
+        }
+        const jointResultsObj = {
+             overallCOOPWinRate: results.winRateCOOP.COOPWinRate,
+             alienCOOPWinRate: results.winRateCOOPTeams.COOPAlienWinRate,
+             marineCOOPWinRate: results.winRateCOOPTeams.COOPMarineWinRate,
+        }
+        if (playerOneResults.playerWinCount + playerTwoResults.playerWinCount > 0) {
+         setHasVsResults(true);
+         setPlayer1Results(playerOneResults);
+         setPlayer2Results(playerTwoResults);
+        }
+        setJointResults(jointResultsObj);
+        setCurrentSubmissionCompleted(true);
+        stopPolling();
+    }
+/*
     const handleCompareSubmission = async () => {
         // TODO check steam id valid
         if (player1 && player2) {
-            setSubmissionProgress(true);
-            const results = await scraperApi.comparePlayersVs(player1, player2);
+            setSubmissionInProgress(true);
+           // const results = await scraperApi.comparePlayersVs(player1, player2);
+
             if (results) {
-                setSubmissionProgress(false);
+                setSubmissionInProgress(false);
                    // check returned obj
                    const playerOneResults = {
                        name: results.playerOneName,
@@ -81,7 +145,7 @@ export default function MainPage(props) {
         }
 
     }
-
+*/
     return (
         <div>
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} position='sitcky'>
@@ -100,7 +164,7 @@ export default function MainPage(props) {
                     </Grid>
                     <Grid xs={4}>
                         <Button id="compare-button" onClick={() => {
-                            handleCompareSubmission();
+                            triggerComparisonSubmission();
                         }}>Compare</Button>
                         {submissionInProgress && <CircularProgress variant='determinate' value={progressValue}></CircularProgress>}
                     </Grid>

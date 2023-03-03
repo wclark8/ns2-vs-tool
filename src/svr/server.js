@@ -6,7 +6,9 @@ const cors = require("cors")
 const triggerCrawlingOperations = require('./triggerCrawlingOperations')
 const ComparisonProgress = require('../crawler/functions/comparisonProgress');
 const port = process.env.PORT || 3000;
-const jsonParser = bodyParser.json()
+const jsonParser = bodyParser.json();
+const { v4: uuidv4 } = require('uuid');
+const store = require('../crawler/utilities/store');
 
 async function startServer() {
     let comparisonProgressObj; //hmmmmmmmmmmmmmmmmmmmmm
@@ -19,6 +21,36 @@ async function startServer() {
         res.sendFile(path.join(__dirname, '../', 'build', 'index.html'));
     }); 
 
+    app.post('/compare', jsonParser, (req, res) => {
+        try {
+            comparisonProgressObj = new ComparisonProgress();
+            comparisonProgressObj.comparisonID = uuidv4();
+            triggerCrawlingOperations({playerIds: req.body.playerIds}, comparisonProgressObj);
+            res.json(comparisonProgressObj.comparisonID);
+        } catch (err) {
+            console.log(err);
+            res.json(err)
+        }
+    })
+
+    app.get('/results', async (req, res) => {
+        try {
+            const id = req.query.id;
+            if(store.store.has(id)) {
+                res.json(store.store.get(id));
+            } else {
+                res.json('No results found for this id');
+                console.log('No results found for ID ' + id);
+            }
+        } catch (err) {
+            res.json('No results found for this id');
+            console.log(err);
+        }
+    });
+
+    /*
+    * Depricate?
+    */
     app.post('/players', jsonParser, async (req, res) => {
         try {
             comparisonProgressObj = new ComparisonProgress();
@@ -26,17 +58,13 @@ async function startServer() {
             res.json(results);
         } catch (err) {
             console.log(err);
+            res.json(err)
         }
     })
 
-    /**
-     * just to stop azure loadbalancer messing with me
-     * 
-     * maybe move to async model 
-     */
     app.get('/progress', async (req, res) => {
         try {
-            res.json(comparisonProgressObj.progressValue)
+            res.json({progressValue: comparisonProgressObj.progressValue, comparisonComplete: comparisonProgressObj.comparisonComplete})
         } catch (err) {
             console.log("Progress error: " + err);
         }
