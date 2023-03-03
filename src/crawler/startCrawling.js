@@ -1,5 +1,6 @@
 const Player = require('../models/Player')
 const playerMatchup = require('./functions/playerMatchup');
+const store = require('../crawler/utilities/store');
 
 let comparisonProgress;
 
@@ -30,6 +31,9 @@ async function startCrawling(browserInstance, payload, comparisonProgressObj) {
 
         await browser.close();
         
+        comparisonProgress.comparisonComplete = true;
+        store.store.set(comparisonProgress.comparisonID, results)
+
         return results;
 
     } catch(err) {
