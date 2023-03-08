@@ -58,6 +58,7 @@ export default function MainPage(props) {
     const triggerComparisonSubmission = async () => {
         if (player1 && player2) {
             const comparisonId = await scraperApi.comparePlayersVsAsync(player1, player2);
+            setCurrentSubmissionCompleted(false);
             setSubmissionInProgress(true);
             setComparisonID(comparisonId);
         }
@@ -99,53 +100,7 @@ export default function MainPage(props) {
         setCurrentSubmissionCompleted(true);
         stopPolling();
     }
-/*
-    const handleCompareSubmission = async () => {
-        // TODO check steam id valid
-        if (player1 && player2) {
-            setSubmissionInProgress(true);
-           // const results = await scraperApi.comparePlayersVs(player1, player2);
 
-            if (results) {
-                setSubmissionInProgress(false);
-                   // check returned obj
-                   const playerOneResults = {
-                       name: results.playerOneName,
-                       avatarUrl: results.playerOneAvatar,
-                       elo: results.playerOneElo,
-                       accuracies: results.playerOneAccuracies,
-                       overallWinRate: results.winRateVs.playerOneWinRate,
-                       alienWinRate: results.winRateVsTeams.playerOneWinRateTeam.alien,
-                       marineWinRate: results.winRateVsTeams.playerOneWinRateTeam.marine,
-                       playerWinCount: results.playerOneWinsCount
-                   }
-                   const playerTwoResults = {
-                       name: results.playerTwoName,
-                       avatarUrl: results.playerTwoAvatar,
-                       elo: results.playerTwoElo,
-                       accuracies: results.playerTwoAccuracies,
-                       overallWinRate: results.winRateVs.playerTwoWinRate,
-                       alienWinRate: results.winRateVsTeams.playerTwoWinRateTeam.alien,
-                       marineWinRate:results.winRateVsTeams.playerTwoWinRateTeam.marine,
-                       playerWinCount: results.playerTwoWinsCount
-                   }
-                   const jointResultsObj = {
-                        overallCOOPWinRate: results.winRateCOOP.COOPWinRate,
-                        alienCOOPWinRate: results.winRateCOOPTeams.COOPAlienWinRate,
-                        marineCOOPWinRate: results.winRateCOOPTeams.COOPMarineWinRate,
-                   }
-                   if (playerOneResults.playerWinCount + playerTwoResults.playerWinCount > 0) {
-                    setHasVsResults(true);
-                    setPlayer1Results(playerOneResults);
-                    setPlayer2Results(playerTwoResults);
-                   }
-                   setJointResults(jointResultsObj);
-                   setCurrentSubmissionCompleted(true);
-               }
-        }
-
-    }
-*/
     return (
         <div>
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }} position='sitcky'>
@@ -178,8 +133,4 @@ export default function MainPage(props) {
 
         </div>
     )
-        }
-
-/*
-sort out the bullshit styling
-*/
+}
