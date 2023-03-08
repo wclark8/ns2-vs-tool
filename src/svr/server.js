@@ -11,7 +11,7 @@ const { v4: uuidv4 } = require('uuid');
 const store = require('../crawler/utilities/store');
 
 async function startServer() {
-    let comparisonProgressObj; //hmmmmmmmmmmmmmmmmmmmmm
+    let comparisonProgressObj;
 
     app.use(express.static(path.join(__dirname, '../', 'build')));
     
@@ -36,8 +36,9 @@ async function startServer() {
     app.get('/results', async (req, res) => {
         try {
             const id = req.query.id;
-            if(store.store.has(id)) {
+            if (store.store.has(id)) {
                 res.json(store.store.get(id));
+                store.store.delete(id)
             } else {
                 res.json('No results found for this id');
                 console.log('No results found for ID ' + id);
@@ -49,7 +50,7 @@ async function startServer() {
     });
 
     /*
-    * Depricate?
+    * Not used in frontend
     */
     app.post('/players', jsonParser, async (req, res) => {
         try {
