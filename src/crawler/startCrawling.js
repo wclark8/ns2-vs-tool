@@ -1,18 +1,25 @@
-//const gatherPlayerRounds = require('./gatherPlayerRounds');
-
 const Player = require('../models/Player')
 const playerMatchup = require('./functions/playerMatchup');
+const store = require('../crawler/utilities/store');
 
-async function startCrawling(browserInstance, payload) {
+let comparisonProgress;
+
+async function startCrawling(browserInstance, payload, comparisonProgressObj) {
     let browser;
+    comparisonProgress = comparisonProgressObj;
     let playerResults = [];
     try {
         browser = await browserInstance;
-        for (playerId of payload.playerIds) {
-            let url = 'https://ns2panel.com/player/' + playerId
-            playerResults.push(await scraperObject.scraper(browser, url));
+        try{
+            for (playerId of payload.playerIds) {
+                let url = 'https://ns2panel.com/player/' + playerId
+                playerResults.push(await scraperObject.scraper(browser, url));
+                comparisonProgress.increaseProgressValue(50);
+            }
+        } catch(err) {
+            console.log(err + " no playerIDs in payload");
+            throw err
         }
-
 
         const results = playerMatchup(playerResults[0], playerResults[1]);
         
@@ -24,7 +31,9 @@ async function startCrawling(browserInstance, payload) {
 
         await browser.close();
         
-        //return results, make them nice later
+        comparisonProgress.comparisonComplete = true;
+        store.store.set(comparisonProgress.comparisonID, results)
+
         return results;
 
     } catch(err) {
@@ -72,6 +81,8 @@ const scraperObject = {
            player.avatarUrl = playerData.playerAvatarMetadata;
            player.elo = { elo: playerData.elo, marineElo: playerData.marineElo, alienElo: playerData.alienElo }
            player.accuracies = { marineAcc: playerData.marineAcc, alienAcc: playerData.alienAcc }
+           
+           comparisonProgress.increaseProgressValue(5);
        }
 
         
@@ -81,7 +92,7 @@ const scraperObject = {
             let getRowInfo = await page.$$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > div.flex.flex-col.mb-4 > div > div > div > table > tbody > tr', row => {
     
                 return row.map(r => {
-                    let winStatus = r.querySelector('td:nth-child(6)').textContent; // strip newline and whitespace TODO: SWITCH TO INNERTEXT TO AVOID SANI
+                    let winStatus = r.querySelector('td:nth-child(6)').textContent;
                     winStatus = winStatus.replace(/(^\s*(?!.+)\n+)|(\n+\s+(?!.+)$)/g, "").trim();
                     let roundId = r.querySelector('td:nth-child(7) > div > a').href; // extract id
                     let team = r.querySelector('td:nth-child(5) > div > div > span').innerText;
@@ -98,6 +109,7 @@ const scraperObject = {
                         const nextRoundsButton = await page.$$eval('body > div:nth-child(2) > div > div > div.py-10 > main > div > div.mt-4 > nav > a:nth-child(2)', elements => {
                             return elements.map(e => e.textContent.includes('Next'))
                         });
+                        comparisonProgress.increaseProgressValue(0.1);
                         nextRoundsButtonAvailable = nextRoundsButton.length == 0 ? false : true;
                     } catch (err) {
                         // "this should never happen"
