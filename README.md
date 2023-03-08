@@ -15,7 +15,7 @@ dependencies: node 16, npm
 
 all steps assuming you're at the root of the project directory
 
-# local frontend
+### local frontend
 
 ```bash
 npm i
@@ -29,14 +29,14 @@ npm run start
 
 (if you are on windows check the build directory does not have a trailing whitespace)
 
-# cmdline
+### cmdline
 
 ```bash
 npm i
 node ./src/index.js --env=localCmdLine --player1=27140047 --player2=112370
 ```
 
-# rest
+### rest
 
 ```bash
 npm i
