@@ -5,7 +5,7 @@ ns2-vs-tool compares two players winrates when playing against each other and wi
 currently hosted: https://ns2-vs.azurewebsites.net/
 
 (if it's not up, get in touch: Will#4799)
-(if it's up but broken, i've probably ran out of credits on browserless - will from azure app service to azure vm at some point to solve the issue)
+(if it's up but broken, i've probably ran out of credits on browserless - will move from azure app service to azure vm at some point to solve the issue)
 
 ## Installation
 
