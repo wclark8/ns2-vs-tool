@@ -13,7 +13,7 @@ import ScraperApi from './api/scraperApi';
 const mdTheme = createTheme();
 
 function App() {
-  const apiConfig = {url: process.env.REACT_APP_SERVICE_URL | 'http://localhost:3000', headers: {
+  const apiConfig = {url: 'http://localhost:3000', headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   },};

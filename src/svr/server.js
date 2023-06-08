@@ -34,11 +34,10 @@ async function startServer() {
     })
 
     app.get('/results', async (req, res) => {
+        const id = req.query.id;
         try {
-            const id = req.query.id;
             if (store.store.has(id)) {
                 res.json(store.store.get(id));
-                store.store.delete(id)
             } else {
                 res.json('No results found for this id');
                 console.log('No results found for ID ' + id);
@@ -46,6 +45,8 @@ async function startServer() {
         } catch (err) {
             res.json('No results found for this id');
             console.log(err);
+        } finally {
+            //store.store.delete(id)
         }
     });
 

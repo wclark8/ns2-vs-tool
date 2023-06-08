@@ -25,6 +25,9 @@ function playerMatchup(playerOne, playerTwo) {
     const playerOneRounds = playerOne.rounds;
     const playerTwoRounds = playerTwo.rounds;
     
+    let playerOneRoundMatches = [];
+    let playerTwoRoundMatches = [];
+
     let playerOneVsWins = {
         'Alien wins': 0,
         'Marine wins': 0
@@ -57,24 +60,32 @@ function playerMatchup(playerOne, playerTwo) {
                 // match
                 if (playerOneRound.winStatus === 'Win' && playerOneRound.winStatus === playerTwoRound.winStatus) {
                    updateCoopPlayerWin(playerOneRound.team);
+                   playerOneRoundMatches.push(playerOneRound);
+                   playerTwoRoundMatches.push(playerTwoRound);
                    jointWinsCount++;
                    break;
                 }
                 if (playerOneRound.winStatus === 'Loss' && playerOneRound.winStatus === playerTwoRound.winStatus) {
-                    updateCoopPlayerLosses(playerOneRound.team)
+                    updateCoopPlayerLosses(playerOneRound.team);
+                    playerOneRoundMatches.push(playerOneRound);
+                    playerTwoRoundMatches.push(playerTwoRound);
                     jointLosesCount++;
                     break;
                 }
 
                 if (playerOneRound.winStatus === 'Win') {
-                    updateVsPlayerWin(playerOneRound.team, 1)
+                    updateVsPlayerWin(playerOneRound.team, 1);
+                    playerOneRoundMatches.push(playerOneRound);
                     playerOneWinsCount++;
                     break;
                 } else if (playerTwoRound.winStatus === 'Win') {
-                    updateVsPlayerWin(playerTwoRound.team, 2)
+                    updateVsPlayerWin(playerTwoRound.team, 2);
+                    playerTwoRoundMatches.push(playerTwoRound);
                     playerTwoWinsCount++;
                     break;
                 } else {
+                    playerOneRoundMatches.push(playerOneRound);
+                    playerTwoRoundMatches.push(playerTwoRound);
                     draws++;
                     break;
                 }
@@ -109,7 +120,10 @@ function playerMatchup(playerOne, playerTwo) {
     let playerOneAccuracies = playerOne.accuracies;
     let playerTwoAccuracies = playerTwo.accuracies;
 
-    return {playerOneName, playerTwoName, playerOneAccuracies, playerTwoAccuracies, playerOneElo, playerTwoElo, playerOneAvatar, playerTwoAvatar, playerOneWinsCount, playerTwoWinsCount, jointWinsCount, jointLosesCount, draws, winRateVs, winRateVsTeams, winRateCOOP, winRateCOOPTeams};
+    return {playerOneName, playerTwoName, playerOneAccuracies, playerTwoAccuracies, playerOneElo, playerTwoElo, playerOneAvatar, playerTwoAvatar,
+         playerOneWinsCount, playerTwoWinsCount, jointWinsCount, jointLosesCount, draws, winRateVs, winRateVsTeams, winRateCOOP, winRateCOOPTeams,
+         playerOneRoundMatches, playerTwoRoundMatches
+    };
 
 }
 

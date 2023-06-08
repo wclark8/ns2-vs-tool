@@ -74,7 +74,8 @@ export default function MainPage(props) {
             overallWinRate: results.winRateVs.playerOneWinRate,
             alienWinRate: results.winRateVsTeams.playerOneWinRateTeam.alien,
             marineWinRate: results.winRateVsTeams.playerOneWinRateTeam.marine,
-            playerWinCount: results.playerOneWinsCount
+            playerWinCount: results.playerOneWinsCount,
+            rounds: results.playerOneRoundMatches
         }
         const playerTwoResults = {
             name: results.playerTwoName,
@@ -84,7 +85,8 @@ export default function MainPage(props) {
             overallWinRate: results.winRateVs.playerTwoWinRate,
             alienWinRate: results.winRateVsTeams.playerTwoWinRateTeam.alien,
             marineWinRate:results.winRateVsTeams.playerTwoWinRateTeam.marine,
-            playerWinCount: results.playerTwoWinsCount
+            playerWinCount: results.playerTwoWinsCount,
+            rounds: results.playerTwoRoundMatches
         }
         const jointResultsObj = {
              overallCOOPWinRate: results.winRateCOOP.COOPWinRate,

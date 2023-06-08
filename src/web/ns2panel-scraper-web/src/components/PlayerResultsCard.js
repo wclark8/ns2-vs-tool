@@ -5,20 +5,27 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button'
 import { CardActions, CardHeader } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
+import RoundDrawer from './RoundDrawer';
 
 export default function PlayerResultsCard(props){
 
     const [expanded, setExpanded] = React.useState(false);
+    const [openRoundDrawer, setRoundDrawerOpen] = React.useState(false);
 
     const result = props.result;
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
       };
+
+    const handleOpenDrawer = () => {
+        setRoundDrawerOpen(!openRoundDrawer)
+    }
 
     return(
         result.name &&
@@ -47,6 +54,7 @@ export default function PlayerResultsCard(props){
                 </List>
             </CardContent>
                 <CardActions>
+                <Button size="small" rounds={result.rounds} onClick={handleOpenDrawer}>List Rounds</Button>
                 <ExpandMoreIcon expand={expanded} onClick={handleExpandClick}/>
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -76,6 +84,13 @@ export default function PlayerResultsCard(props){
                         </List>
                     </CardContent>
                     </Collapse>
+                    <RoundDrawer
+                        anchor='right'
+                        open={openRoundDrawer}
+                        onBackdropClick={handleOpenDrawer}
+                        rounds={result.rounds}
+                    >
+                    </RoundDrawer>
         </Card>
     );
 }
